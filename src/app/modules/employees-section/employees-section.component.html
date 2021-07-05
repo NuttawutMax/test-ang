@@ -1,0 +1,67 @@
+<div class="row">
+    <div class="col-12">
+        <app-title title="Employee List"></app-title>
+    </div>
+
+    <div class="col-12">
+        <div class="card m-4" *ngFor="let data of datas; let i = index">
+            <div class="card-body">
+                <h3 class="card-title" style="border-bottom: 1px black solid;">
+                    {{data.firstname}} {{data.lastname}} ({{data.birthdate | calulateBirthDate:true}})
+                </h3>
+                <small>{{data.employeetype}}</small>
+                <div class="row mt-2">
+                    <h5>Personal Information</h5>
+                    <div class="col-3">
+                        Date of birth: {{data.birthdate |calulateBirthDate}}
+                    </div>
+                    <div class="col-3">
+                        Start date: {{data.startdate}}
+                    </div>
+                    <div class="col-3">
+                        Current salary: {{data.employeetype === 'Permanent' ? (data.salary | number) + ' per month' : (data.salary | number) +
+                        '
+                        per hour'}}
+                    </div>
+                </div>
+                <div class="row mt-2" *ngIf="data.employeetype === 'Permanent'">
+                    <h5>Provident Fund</h5>
+
+                    <div class="col-12" *ngIf="!isEdit">
+                        Current PVF rate: {{data.pvfrate}} <button type="button" class="btn btn-outline-primary"
+                            (click)="editPVF(); currentIndex = i; tempPVF = data.pvfrate">Edit</button>
+                    </div>
+                    <div class="col-12" *ngIf="isEdit && currentIndex === i">
+                        <mat-form-field appearance="fill">
+                            <mat-label>PFV Rate (2-12%)</mat-label>
+                            <input type="number" matInput [(ngModel)]="data.pvfrate">
+                            <mat-hint class="mat-error" *ngIf="data?.pvfrate > 12 || data?.pvfrate < 2">
+                                PFV Rate cannot select more than 12% and less than 2%
+                            </mat-hint>
+                        </mat-form-field>
+                        <div class="col-6">
+                            <button type="button" class="btn btn-primary" (click)="editPVF()" [disabled]="data?.pvfrate > 12 || data?.pvfrate < 2">Confirm</button>
+                            <button type="button ml-2" class="btn btn-danger" (click)="data.pvfrate = tempPVF; editPVF()">Cancel</button>
+                        </div>
+                    </div>
+                    <strong>Provident Fund base on salary</strong>
+                    <div class="col-6">
+                        Contribute by company
+                        <p> {{calculatePVD(data, 'company') | number}} bath</p>
+                    </div>
+                    <div class="col-6">
+                        Contribute by employee's pvf rate
+                        <p> {{calculatePVD(data, 'employee') | number}} bath</p>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <strong>Provident fund that can be receive as of today</strong>
+                    <div class="col-6">
+                        <p> {{calculatePVD(data, 'company', true) | number}} bath </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
