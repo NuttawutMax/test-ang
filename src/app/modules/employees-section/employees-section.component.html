@@ -55,7 +55,7 @@
                     </div>
 
                 </div>
-                <div class="row">
+                <div class="row"  *ngIf="data.employeetype === 'Permanent'">
                     <strong>Provident fund that can be receive as of today</strong>
                     <div class="col-6">
                         <p> {{calculatePVD(data, 'company', true) | number}} bath </p>
